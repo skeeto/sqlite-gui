@@ -8250,48 +8250,7 @@ bool processEditKeys(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	return false;
 }
 
-unsigned int __stdcall checkUpdate (void* data) {
-	time_t t = time(0);
-	tm* now = localtime(&t);
-	int date = (now->tm_year + 1900) * 10000 + (now->tm_mon + 1) * 100 + now->tm_mday;
-	if (date != prefs::get("last-update-check")) {
-		DWORD read;
-		char buf8[1001]{0};
-
-		char uri[] = "api.github.com";
-		char path[] = "repos/little-brother/sqlite-gui/commits/master";
-		char headers[] = "Accept: application/vnd.github.v3+json";
-
-		HINTERNET hInet = InternetOpenA("Mozilla/4.0 (compatible; MSIE 6.0b; Windows NT 5.0; .NET CLR 1.0.2914)", INTERNET_OPEN_TYPE_PRECONFIG, "", "", 0);
-		HINTERNET hSession = InternetConnectA(hInet, uri, INTERNET_DEFAULT_HTTPS_PORT, "", "", INTERNET_SERVICE_HTTP, 0, 1u);
-		HINTERNET hRequest = HttpOpenRequestA(hSession, "GET", path, NULL, uri, 0, INTERNET_FLAG_SECURE, 1);
-		if (HttpSendRequestA(hRequest, headers, strlen(headers), 0, 0)) {
-			InternetReadFile(hRequest, &buf8, 1000, &read);
-
-			TCHAR* buf16 = utils::utf8to16(buf8);
-			TCHAR* message = _tcsstr(buf16, TEXT("\"message\""));
-			TCHAR* tree = _tcsstr(buf16, TEXT("\"tree\""));
-
-			if (message && _tcsstr(message, TEXT(GUI_VERSION)) == 0) {
-				TCHAR msg[1024]{0};
-				_tcsncpy(msg, message + 11, _tcslen(message) - _tcslen(tree) - 13);
-				TCHAR* msg2 = utils::replaceAll(msg, TEXT("\\n"), TEXT("\n"));
-				_sntprintf(msg, 1023, TEXT("%ls\n\nWould you like to download it?"), msg2);
-				if (IDYES == MessageBox(hMainWnd, msg, TEXT("New version was released"), MB_YESNO))
-					ShellExecute(0, 0, TEXT("https://github.com/little-brother/sqlite-gui/releases/latest"), 0, 0 , SW_SHOW);
-				delete [] msg2;
-			}
-			delete [] buf16;
-		}
-		InternetCloseHandle(hRequest);
-		InternetCloseHandle(hSession);
-		InternetCloseHandle(hInet);
-
-		prefs::set("last-update-check", date);
-	}
-
-	return 1;
-}
+unsigned int __stdcall checkUpdate (void* data) { return 0; }
 
 HWND createResultList(HWND hParentWnd, int resultNo) {
 	HWND hWnd = CreateWindow(WC_LISTVIEW, NULL, WS_VISIBLE | WS_TABSTOP | WS_CHILD | LVS_AUTOARRANGE | LVS_REPORT | LVS_SHOWSELALWAYS | LVS_OWNERDATA, 0, 0, 0, 0, hParentWnd, (HMENU)IntToPtr(IDC_TAB_ROWS + resultNo), GetModuleHandle(0), NULL);
