@@ -978,7 +978,7 @@ static const char *Railgun_Doublet(
 	uint32_t cbTarget, uint32_t cbPattern)
 {
 	const char * pbTargetMax = pbTarget + cbTarget;
-	register uint32_t ulHashPattern;
+	uint32_t ulHashPattern;
 	uint32_t count, countSTATIC;
 
 	if (cbPattern > cbTarget) return(NULL);
