@@ -1,0 +1,13 @@
+#define UNICODE
+#define _UNICODE
+#define SQLITE_OMIT_LOAD_EXTENSION
+#include <winsock2.h>
+#include "extensions/inja.cpp"
+#include "extensions/xml.cpp"
+#include "include/pugixml.cpp"
+#include "src/dialogs.cpp"
+#include "src/http.cpp"
+#include "src/main.cpp"
+#include "src/prefs.cpp"
+#include "src/tools.cpp"
+#include "src/utils.cpp"
